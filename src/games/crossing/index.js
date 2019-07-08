@@ -1,5 +1,17 @@
 import Phaser from 'phaser'
 
+// https://github.com/webpack-contrib/file-loader/issues/93
+
+/* ISSUE_HERE (3/3)
+This issue talks about using import instead of require
+https://github.com/webpack-contrib/file-loader/issues/93
+but it didn't make a difference
+
+import player from './images/player.png'
+import dragon from './images/dragon.png'
+import treasure from './images/treasure.png'
+import background from './images/background.png'
+*/
 class GameScene extends Phaser.Scene {
   constructor () {
     super('Game')
@@ -15,6 +27,17 @@ class GameScene extends Phaser.Scene {
     this.load.image('dragon', require('./images/dragon.png'))
     this.load.image('treasure', require('./images/treasure.png'))
     this.load.image('background', require('./images/background.png'))
+
+    /* alternative implementation with same issue
+    console.log(player)
+    console.log(dragon)
+    console.log(treasure)
+    console.log(background)
+    this.load.image('player', player)
+    this.load.image('dragon', dragon)
+    this.load.image('treasure', treasure)
+    this.load.image('background', background)
+    */
   }
 
   create () {

@@ -77,25 +77,39 @@ module.exports = function (ctx) {
           }
         })
         /* ISSUE_HERE (1/3)
-        Comment out the rest of this function to experience:
 
+        Hello!  And Welcome To The Internet!
+
+        This is a [Quasar](http://quasar.dev) config file.
+        This section extends web pack.
+
+        Also included is [phaser.io] - a HTML game engine packaged in npm.
+        To see the original problem, comment out the rest of this
+        function and run `yarn && quasar dev`
+
+        ```
         Error: Local data URIs are not supported: player
+        ```
 
+        This error happens because webpack made the file into a dataurl.
         Phaser wants to load resources over XHR, so would like URL instead.
-        This error happens because webpack made the file a dataurl.
+        Phaser refuses to implement data urls in it's loader.
 
-        The code below is my attempt to configure webpack to process these
-        files so they can be loaded via XHR
+        The code below is my attempt to configure Quasar's webpack to process
+        these files so they can be loaded in phaser via XHR
         */
 
         // Find babel-loader because I heard it makes a difference
+        // https://stackoverflow.com/a/45428153/1483977
+        // https://github.com/webpack-contrib/file-loader/issues/93
         let r = cfg.module.rules
         const index = r.findIndex(rule => {
-          return (rule && rule.use) ? rule.use.loader === 'babel-loader' : false
-        }) || 0
+          return (rule && rule.use) ? rule.use[0].loader === 'babel-loader' : false
+        })
+
+        console.log(index)
 
         // Insert these after the babel-loader because it might make a difference:
-        // https://stackoverflow.com/a/45428153/1483977
         r.splice(index + 1, 0, {
           include: /src\/games/,
           test: [/\.vert$/i, /\.frag$/i],
@@ -107,12 +121,13 @@ module.exports = function (ctx) {
           use: 'file-loader'
         }
         )
-        console.log(cfg)
+
+        // What is going on!
         cfg.module.rules.forEach(rule => {
           console.log(rule)
         })
 
-        /* ISSUE_HERE
+        /* ISSUE_HERE (2/3)
         Webpack created these files (output in browser console)
         ```
         1b7d460ae0a1b62ad310366012bc4e20.png
